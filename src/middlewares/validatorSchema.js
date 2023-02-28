@@ -4,7 +4,7 @@ const validatorSchema = (schema) => {
 
         if (error) {
             const errorMessages = error.details.map((e) => e.message);
-            res.status(422).send(errorMessages);
+            return res.status(422).send(errorMessages);
         }
         next();
     }
