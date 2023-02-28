@@ -42,6 +42,16 @@ export async function openShortUrl(req, res) {
     }
 }
 
-export function deleteShortUrlById(req, res) {
-    res.send("OK")
+export async function deleteShortUrlById(req, res) {
+    const idShortUrl = req.params.id;
+    const userId = res.locals.id;
+    try{
+        const getShortUrl = await db.query('SELECT * FROM "shortUrls" WHERE id = $1',[idShortUrl]);
+        if(!getShortUrl.rows[0]) return res.sendStatus(404);
+        if(getShortUrl.rows[0].userId !== userId) return res.sendStatus(401);
+        await db.query('DELETE FROM "shortUrls" WHERE id = $1',[idShortUrl]);
+        res.sendStatus(204);
+    } catch (err){
+        res.status(500).send(err);
+    }
 }
