@@ -16,9 +16,16 @@ export async function insertShortUrl(req, res) {
 
 }
 
-export function getShortUrlById(req, res) {
-    res.send("OK")
-    
+export async function getShortUrlById(req, res) {
+    const idShortUrl = req.params.id;
+
+    try{
+        const getShortUrl = await db.query('SELECT id, code as "shortUrl", url FROM "shortUrls" WHERE id = $1;',[idShortUrl]);
+        if(!getShortUrl.rows[0]) return res.sendStatus(404);
+        res.send(getShortUrl.rows[0]);
+    } catch (err){
+        res.status(500).send(err);
+    }
 }
 
 export function openShortUrl(req, res) {
