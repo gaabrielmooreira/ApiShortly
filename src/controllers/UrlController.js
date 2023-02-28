@@ -28,8 +28,18 @@ export async function getShortUrlById(req, res) {
     }
 }
 
-export function openShortUrl(req, res) {
-    res.send("OK")
+export async function openShortUrl(req, res) {
+    const code = req.params.shortUrl;
+
+    try{
+        const getShortUrl = await db.query('SELECT * FROM "shortUrls" WHERE code = $1;',[code]);
+        if(!getShortUrl.rows[0]) return res.sendStatus(404);
+        const viewsNow = Number(getShortUrl.rows[0].views) + 1;
+        await db.query('UPDATE "shortUrls" SET views = $1 WHERE code = $2;',[viewsNow,code]);
+        res.redirect(getShortUrl.rows[0].url);
+    } catch (err){
+        res.status(500).send(err);
+    }
 }
 
 export function deleteShortUrlById(req, res) {
