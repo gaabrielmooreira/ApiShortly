@@ -4,13 +4,14 @@ import jwt from 'jsonwebtoken';
 
 export async function signIn(req, res){
     const {email, password} = req.body;
+    const SECRET_KEY= '00gabriel00';
     try{
         const getUser = await db.query('SELECT * FROM users WHERE email = $1;',[email]);
         const user = getUser.rows[0];
         const checkPassword = bcrypt.compareSync(password, user.password);
 
         if(user && checkPassword){
-            const token = jwt.sign({id: user.id}, process.env.SECRET_KEY);
+            const token = jwt.sign({id: user.id}, SECRET_KEY);
             return res.send(token);
         } else {
             return res.sendStatus(401);
