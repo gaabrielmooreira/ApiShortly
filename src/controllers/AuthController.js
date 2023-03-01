@@ -7,6 +7,7 @@ export async function signIn(req, res){
     const SECRET_KEY= '00gabriel00';
     try{
         const getUser = await db.query('SELECT * FROM users WHERE email = $1;',[email]);
+        if(getUser.rowCount === 0) return res.sendStatus(401);
         const user = getUser.rows[0];
         const checkPassword = bcrypt.compareSync(password, user.password);
 
