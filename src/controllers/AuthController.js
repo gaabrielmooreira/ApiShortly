@@ -12,7 +12,7 @@ export async function signIn(req, res){
 
         if(user && checkPassword){
             const token = jwt.sign({id: user.id}, SECRET_KEY);
-            return res.send(token);
+            return res.send({name: user.name, token});
         } else {
             return res.sendStatus(401);
         }

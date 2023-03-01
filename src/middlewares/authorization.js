@@ -6,7 +6,6 @@ const authorization = (req,res,next) => {
     const SECRET_KEY='00gabriel00';
     try{
         const decoded = jwt.verify(token, SECRET_KEY);
-        console.log(decoded);
         res.locals.id = decoded.id;
         next();
     } catch(err){
